@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Sige.Financeiro.Api.Models;
 
 namespace Sige.Financeiro.Api.Controllers
 {
@@ -10,9 +11,9 @@ namespace Sige.Financeiro.Api.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "Relatórios";
 
-            return View();
+            return View(ContaVeiwModel.Get());
         }
     }
 }
