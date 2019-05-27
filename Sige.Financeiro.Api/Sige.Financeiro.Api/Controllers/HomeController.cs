@@ -13,7 +13,7 @@ namespace Sige.Financeiro.Api.Controllers
         {
             ViewBag.Title = "Relatórios";
 
-            return View(ContaVeiwModel.Get());
+            return View(ContaViewModel.Get());
         }
     }
 }

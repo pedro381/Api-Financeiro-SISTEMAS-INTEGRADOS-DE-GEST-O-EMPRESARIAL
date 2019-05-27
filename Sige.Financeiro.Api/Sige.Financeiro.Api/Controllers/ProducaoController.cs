@@ -16,9 +16,9 @@ namespace Sige.Financeiro.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("Producao/GetRelatorioOperacional")]
-        public IEnumerable<ContaVeiwModel> GetRelatorioOperacional()
+        public IEnumerable<ContaViewModel> GetRelatorioOperacional()
         {
-            return ContaVeiwModel.Get();
+            return ContaViewModel.Get();
 
         }
 
@@ -28,9 +28,9 @@ namespace Sige.Financeiro.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("Producao/GetRelatorioTatico")]
-        public IEnumerable<ContaVeiwModel> GetRelatorioTatico()
+        public IEnumerable<ContaViewModel> GetRelatorioTatico()
         {
-            return ContaVeiwModel.Get();
+            return ContaViewModel.Get();
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace Sige.Financeiro.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("Producao/GetRelatorioEstrategico")]
-        public IEnumerable<ContaVeiwModel> GetRelatorioEstrategico()
+        public IEnumerable<ContaViewModel> GetRelatorioEstrategico()
         {
-            return ContaVeiwModel.Get();
+            return ContaViewModel.Get();
         }
     }
 }
