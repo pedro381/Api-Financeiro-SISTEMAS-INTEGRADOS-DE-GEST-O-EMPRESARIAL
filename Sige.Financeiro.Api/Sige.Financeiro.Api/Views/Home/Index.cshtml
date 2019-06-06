@@ -1,44 +1,281 @@
-﻿@model IEnumerable<Sige.Financeiro.Api.Models.ContaViewModel>
+﻿@using Sige.Financeiro.Api.Models
+@{
+    var resumodefolha = (List<ContasAPagar>)ViewBag.RESUMODEFOLHA;
+
+    var PagamentosDaSemana = (List<ContasAPagar>)ViewBag.PagamentosDaSemana;
+    
+    var ReceitaMarketing = (decimal)ViewBag.ReceitaMarketing;
+    var ReceitaFinanceiro = (decimal)ViewBag.ReceitaFinanceiro;
+    var ReceitaProducao = (decimal)ViewBag.ReceitaProducao;
+    var ReceitaRH = (decimal)ViewBag.ReceitaRH;
+
+    var DespesasMarketing = (decimal)ViewBag.DespesasMarketing;
+    var DespesasFinanceiro = (decimal)ViewBag.DespesasFinanceiro;
+    var DespesasProducao = (decimal)ViewBag.DespesasProducao;
+    var DespesasRH = (decimal)ViewBag.DespesasRH;
+}
+<style>
+    .panel-heading {
+        font-size: 30px;
+        cursor: pointer;
+    }
+
+    .jumbotron {
+        padding-top: 1px;
+        padding-bottom: 1px;
+        text-align: center;
+        margin-top: 15px;
+    }
+</style>
 <div class="jumbotron">
     <h1>Relatórios Financeiro</h1>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <h2>RESUMO DE FOLHA</h2>
-        <table class="table">
-            <tr>
-                <th>Tipo</th>
-                <th>Area</th>
-                <th>Histórico</th>
-                <th>Data</th>
-                <th>Valor</th>
-                <th>Encargos</th>
-            </tr>
+        <div class="panel panel-primary">
+            <div class="panel-heading" onclick="Collapse('#divResumodeFolha')">Resumo de Folha</div>
+            <div class="panel-body" id="divResumodeFolha" hidden>
+                <table class="table">
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Area</th>
+                        <th>Histórico</th>
+                        <th>Data</th>
+                        <th>Valor</th>
+                        <th>Encargos</th>
+                    </tr>
 
-            @foreach (var item in Model)
-            {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tipo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Area)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Historico)
-                </td>
-                <td>
-                    @item.DataVenc.ToString("dd/MM/yyyy")
-                </td>
-                <td>
-                    R$ @Html.DisplayFor(modelItem => item.Valor)
-                </td>
-                <td>
-                    R$ @Html.DisplayFor(modelItem => item.Encargos)
-                </td>
-            </tr>
-            }
+                    @foreach (var item in resumodefolha)
+                    {
+                        <tr>
+                            <td>
+                                @if (item.status == "58")
+                                {@Html.Raw("Cred.")}
+                            else
+                            {@Html.Raw("Deb.")}
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.origem)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.historico)
+                            </td>
+                            <td>
+                                @item.datavencimento.Value.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                R$ @Html.DisplayFor(modelItem => item.valor)
+                            </td>
+                            <td>
+                                R$ @Html.DisplayFor(modelItem => item.valorpago)
+                            </td>
+                        </tr>
+                    }
 
-        </table>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-success">
+            <div class="panel-heading" onclick="Collapse('#divPagamentosdaSemana')">Pagamentos da Semana</div>
+            <div class="panel-body" id="divPagamentosdaSemana" hidden>
+                <table class="table">
+                    <tr>
+                        <th>Data Lançamento</th>
+                        <th>Data Vencimento</th>
+                        <th>Data Pagamento</th>
+                        <th>Histórico</th>
+                        <th>Origem</th>
+                        <th>Valor</th>
+                    </tr>
+                    @foreach (var item in PagamentosDaSemana)
+                    {
+                        <tr>
+                            <td>
+                                @item.datalancamento.Value.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @item.datavencimento.Value.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @item.datapagamento.Value.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.historico)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.origem)
+                            </td>
+                            <td>
+                                R$ @Html.DisplayFor(modelItem => item.valor)
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading" onclick="Collapse('#divPaineldeAnalisedoCaixa')">Painel de Análise do Caixa</div>
+            <div class="panel-body" id="divPaineldeAnalisedoCaixa" hidden>
+                <table class="table">
+                    <tr>
+                        <th>Areas</th>
+                        <th colspan="2">Movimentação</th>
+                        <th>Saldo</th>
+                        <th>Andamento orçamentário</th>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">
+                            Comercial e Marketing
+                        </td>
+                        <td>
+                            Receitas
+                        </td>
+                        <td>
+                            R$ @ReceitaMarketing.ToString("n2")
+                        </td>
+                        <td rowspan="2">
+                            R$  @((ReceitaMarketing - DespesasMarketing).ToString("n2"))
+                        </td>
+                        <td rowspan="2">
+                            3%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Despesas
+                        </td>
+                        <td>
+                            R$ @DespesasMarketing.ToString("n2")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">
+                            Administrativo
+                        </td>
+                        <td>
+                            Receitas
+                        </td>
+                        <td>
+                            R$ @ReceitaFinanceiro.ToString("n2")
+                        </td>
+                        <td rowspan="2">
+                            R$  @((ReceitaFinanceiro - DespesasFinanceiro).ToString("n2"))
+                        </td>
+                        <td rowspan="2">
+                            -3%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Despesas
+                        </td>
+                        <td>
+                            R$ @DespesasFinanceiro.ToString("n2")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">
+                            Recursos Humanos
+                        </td>
+                        <td>
+                            Receitas
+                        </td>
+                        <td>
+                            R$ @ReceitaRH.ToString("n2")
+                        </td>
+                        <td rowspan="2">
+                            R$  @((ReceitaRH - DespesasRH).ToString("n2"))
+                        </td>
+                        <td rowspan="2">
+                            7%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Despesas
+                        </td>
+                        <td>
+                            R$ @DespesasRH.ToString("n2")
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">
+                            Produção
+                        </td>
+                        <td>
+                            Receitas
+                        </td>
+                        <td>
+                            R$ @ReceitaProducao.ToString("n2")
+                        </td>
+                        <td rowspan="2">
+                            R$  @((ReceitaProducao - DespesasProducao).ToString("n2"))
+                        </td>
+                        <td rowspan="2">
+                            1%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Despesas
+                        </td>
+                        <td>
+                            R$ @DespesasProducao.ToString("n2")
+                        </td>
+                    </tr>
+                </table>
+                
+                <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+                <script type="text/javascript">
+
+                    google.charts.load('current', {'packages':['corechart']});
+
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'Area');
+                        data.addColumn('number', 'Saldo');
+                        data.addRows([
+                            ['Comercial e Marketing',  @(Convert.ToInt32(ReceitaMarketing - DespesasMarketing))],
+                            ['Administrativo', @(Convert.ToInt32(ReceitaFinanceiro - DespesasFinanceiro))],
+                            ['Recursos Humanos', @(Convert.ToInt32(ReceitaRH - DespesasRH))],
+                            ['Produção', @(Convert.ToInt32(ReceitaProducao - DespesasProducao))]
+                        ]);
+
+                        var options = {
+                            'title':'Análise do Caixa',
+                            'width':1000,
+                            'height':400};
+
+                        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+                        chart.draw(data, options);
+                    }
+                </script>
+                <div id="chart_div"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function Collapse(id) {
+        if ($(id + ':visible').length)
+            $(id).hide(1000);
+        else
+            $(id).show(1000);
+    }
+</script>

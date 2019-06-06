@@ -155,5 +155,27 @@ namespace Sige.Financeiro.Api.Controllers
 
             return lst;
         }
+
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Route("Financeiro/GetObterRespostaMelhoriaContinua")]
+        public RespostaMelhoriaContinua GetObterRespostaMelhoriaContinua(string reclamacao)
+        {
+            var rmc = new RespostaMelhoriaContinua { Id = MelhoriaContinua.Reclamacao.ObterResposta(reclamacao) };
+
+            switch (rmc.Id)
+            {
+                case 1:
+                    rmc.Descricao = "Sim";
+                    break;
+                case 2:
+                    rmc.Descricao = "Não";
+                    break;
+                default:
+                    rmc.Descricao = "Pendente";
+                    break;
+            }
+
+            return rmc;
+        }
     }
 }
