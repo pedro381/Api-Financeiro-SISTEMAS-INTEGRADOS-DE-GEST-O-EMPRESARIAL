@@ -177,5 +177,31 @@ namespace Sige.Financeiro.Api.Controllers
 
             return rmc;
         }
+
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Route("Financeiro/LucroPorProduto")]
+        public List<LucroPorProduto> GetLucroPorProduto()
+        {
+            var dataTable = new DataTable();
+            MySqlCommand cmd = _dbConn.CreateCommand();
+            cmd.CommandText = "SELECT * from lucroPorProduto";
+            _dbConn.Open();
+            cmd.ExecuteNonQuery();
+            var da = new MySqlDataAdapter(cmd);
+            da.Fill(dataTable);
+            _dbConn.Close();
+
+            var lst = new List<LucroPorProduto>();
+            var dt = dataTable.AsEnumerable();
+            foreach (var row in dt)
+            {
+                var obj = new LucroPorProduto();
+                obj.idProduto = int.Parse(row[0].ToString());
+                obj.valorRealParaEmpresa = row.Field<string>("valorRealParaEmpresa");
+                lst.Add(obj);
+            }
+
+            return lst;
+        }
     }
 }
